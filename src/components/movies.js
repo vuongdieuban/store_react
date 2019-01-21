@@ -18,41 +18,61 @@ class Movies extends Component {
     const { movies } = this.state;
     if (movies.length === 0) return <p>There are no movies currently</p>;
     return (
-      <table className="table">
-        <thead>
-          <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Genre</th>
-            <th scope="col">Stock</th>
-            <th scope="col">Rate</th>
-            <th scope="col" />
-          </tr>
-        </thead>
-        <tbody>
-          {movies.length &&
-            movies.map(movie => {
-              return (
-                <tr key={movie._id}>
-                  <th scope="row">{movie.name}</th>
-                  <td>{movie.genre.name}</td>
-                  <td>{movie.numberInStock}</td>
-                  <td>{movie.dailyRentalRate}</td>
-                  <td>
-                    <button
-                      onClick={() => {
-                        this.setState({
-                          movies: this.state.movies.filter(m => m !== movie)
-                        });
-                      }}
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              );
-            })}
-        </tbody>
-      </table>
+      <div className="container">
+        <p>There are {movies.length} movies in the Database</p>
+        <table className="table">
+          {this.displayFields()}
+          {this.displayRecords()}
+        </table>
+      </div>
+    );
+  };
+
+  displayFields = () => {
+    const fields = ["Name", "Genre", "Stock", "Rate", "Action"];
+    return (
+      <thead>
+        <tr>
+          {fields.map(field => (
+            <th scope="col" key={field}>
+              {field}
+            </th>
+          ))}
+        </tr>
+      </thead>
+    );
+  };
+
+  handleDelete = movie => {
+    this.setState({
+      movies: this.state.movies.filter(m => m._id !== movie._id)
+    });
+  };
+
+  displayRecords = () => {
+    const { movies } = this.state;
+    return (
+      <tbody>
+        {movies.length &&
+          movies.map(movie => {
+            return (
+              <tr key={movie._id}>
+                <th scope="row">{movie.name}</th>
+                <td>{movie.genre.name}</td>
+                <td>{movie.numberInStock}</td>
+                <td>{movie.dailyRentalRate}</td>
+                <td>
+                  <button
+                    className="btn btn-danger btn-sm"
+                    onClick={() => this.handleDelete(movie)}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            );
+          })}
+      </tbody>
     );
   };
 

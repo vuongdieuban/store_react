@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import _ from "lodash";
 
 class Pagination extends Component {
@@ -17,7 +18,6 @@ class Pagination extends Component {
             className="page-link"
             onClick={() => this.props.onPageChange(page)}
           >
-            {/* Display page number starting from 1 (page start from 0) */}
             {page}
           </div>
         </li>
@@ -32,5 +32,11 @@ class Pagination extends Component {
     );
   }
 }
+
+Pagination.propTypes = {
+  moviesPerPage: PropTypes.number.isRequired,
+  currentPage: PropTypes.number.isRequired,
+  onPageChange: PropTypes.func.isRequired
+};
 
 export default Pagination;

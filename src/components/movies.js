@@ -1,10 +1,15 @@
 import React, { Component } from "react";
+import _ from "lodash";
+import Pagination from "./pagination";
+
 const URL = "http://store.banvuong.com/api/movies";
 // const URL = "http://localhost:3001/api/movies";
 
 class Movies extends Component {
   state = {
-    movies: []
+    movies: [],
+    moviesPerPage: 2,
+    currentPage: 1
   };
 
   fetchMovies = async () => {
@@ -29,7 +34,7 @@ class Movies extends Component {
   };
 
   displayFields = () => {
-    const fields = ["Name", "Genre", "Stock", "Rate", "Action"];
+    const fields = ["Name", "Genre", "Stock", "Rate", ""];
     return (
       <thead>
         <tr>
@@ -43,14 +48,8 @@ class Movies extends Component {
     );
   };
 
-  handleDelete = movie => {
-    this.setState({
-      movies: this.state.movies.filter(m => m._id !== movie._id)
-    });
-  };
-
   displayRecords = () => {
-    const { movies } = this.state;
+    const movies = this.paginate();
     return (
       <tbody>
         {movies.length &&
@@ -76,12 +75,43 @@ class Movies extends Component {
     );
   };
 
+  handleDelete = movie => {
+    this.setState({
+      movies: this.state.movies.filter(m => m._id !== movie._id)
+    });
+  };
+
+  handlePageChange = page => {
+    this.setState({ currentPage: page });
+  };
+
+  paginate = () => {
+    const { movies, moviesPerPage, currentPage } = this.state;
+    const startIndex = (currentPage - 1) * moviesPerPage;
+    const currentMovies = _(movies) // turn movies into lodash wrapper object
+      .slice(startIndex)
+      .take(moviesPerPage)
+      .value(); // convert lodash wrapper object back into normal array
+    return currentMovies;
+  };
+
   componentDidMount() {
     this.fetchMovies();
   }
 
   render() {
-    return this.displayMovies();
+    const { movies, moviesPerPage, currentPage } = this.state;
+    return (
+      <React.Fragment>
+        {this.displayMovies()}
+        <Pagination
+          movies={movies}
+          moviesPerPage={moviesPerPage}
+          currentPage={currentPage}
+          onPageChange={this.handlePageChange}
+        />
+      </React.Fragment>
+    );
   }
 }
 

@@ -4,7 +4,11 @@ import Movies from "./components/movies";
 
 class App extends Component {
   render() {
-    return <Movies />;
+    return (
+      <div className="container">
+        <Movies />
+      </div>
+    );
   }
 }
 

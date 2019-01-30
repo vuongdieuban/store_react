@@ -4,9 +4,8 @@ import _ from "lodash";
 
 class Pagination extends Component {
   renderMovies = () => {
-    const { movies, moviesPerPage, currentPage } = this.props;
-    const totalPages = Math.ceil(movies.length / moviesPerPage);
-
+    const { movies, pageSize, currentPage } = this.props;
+    const totalPages = Math.ceil(movies.length / pageSize);
     const pages = _.range(1, totalPages + 1);
     return pages.map(page => {
       return (
@@ -34,7 +33,7 @@ class Pagination extends Component {
 }
 
 Pagination.propTypes = {
-  moviesPerPage: PropTypes.number.isRequired,
+  pageSize: PropTypes.number.isRequired,
   currentPage: PropTypes.number.isRequired,
   onPageChange: PropTypes.func.isRequired
 };

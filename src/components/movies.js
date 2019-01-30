@@ -1,78 +1,36 @@
 import React, { Component } from "react";
 import _ from "lodash";
 import Pagination from "./pagination";
+import Genres from "./genres";
+import Table from "./moviesTable";
 
-const URL = "http://store.banvuong.com/api/movies";
+const MOVIES_URL = "http://store.banvuong.com/api/movies";
+const GENRES_URL = "http://store.banvuong.com/api/genres";
+
 // const URL = "http://localhost:3001/api/movies";
 
 class Movies extends Component {
   state = {
     movies: [],
-    moviesPerPage: 2,
-    currentPage: 1
+    pageSize: 3, // number of movies per page
+    currentPage: 1,
+
+    genres: [],
+    selectedGenre: {}
   };
 
   fetchMovies = async () => {
-    const api_call = await fetch(URL);
+    const api_call = await fetch(MOVIES_URL);
     const movies = await api_call.json();
     this.setState({ movies });
     console.log(this.state.movies);
   };
 
-  displayMovies = () => {
-    const { movies } = this.state;
-    if (movies.length === 0) return <p>There are no movies currently</p>;
-    return (
-      <div className="container">
-        <p>There are {movies.length} movies in the Database</p>
-        <table className="table">
-          {this.displayFields()}
-          {this.displayRecords()}
-        </table>
-      </div>
-    );
-  };
-
-  displayFields = () => {
-    const fields = ["Name", "Genre", "Stock", "Rate", ""];
-    return (
-      <thead>
-        <tr>
-          {fields.map(field => (
-            <th scope="col" key={field}>
-              {field}
-            </th>
-          ))}
-        </tr>
-      </thead>
-    );
-  };
-
-  displayRecords = () => {
-    const movies = this.paginate();
-    return (
-      <tbody>
-        {movies.length &&
-          movies.map(movie => {
-            return (
-              <tr key={movie._id}>
-                <th scope="row">{movie.name}</th>
-                <td>{movie.genre.name}</td>
-                <td>{movie.numberInStock}</td>
-                <td>{movie.dailyRentalRate}</td>
-                <td>
-                  <button
-                    className="btn btn-danger btn-sm"
-                    onClick={() => this.handleDelete(movie)}
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            );
-          })}
-      </tbody>
-    );
+  fetchGenres = async () => {
+    const api_call = await fetch(GENRES_URL);
+    const genres = await api_call.json();
+    this.setState({ genres });
+    console.log(this.state.genres);
   };
 
   handleDelete = movie => {
@@ -85,32 +43,71 @@ class Movies extends Component {
     this.setState({ currentPage: page });
   };
 
-  paginate = () => {
-    const { movies, moviesPerPage, currentPage } = this.state;
-    const startIndex = (currentPage - 1) * moviesPerPage;
+  handleSelectGenre = genre => {
+    this.setState({
+      selectedGenre: genre,
+      currentPage: 1
+    });
+  };
+
+  paginate = (movies, pageSize, currentPage) => {
+    const startIndex = (currentPage - 1) * pageSize;
     const currentMovies = _(movies) // turn movies into lodash wrapper object
       .slice(startIndex)
-      .take(moviesPerPage)
+      .take(pageSize)
       .value(); // convert lodash wrapper object back into normal array
     return currentMovies;
   };
 
+  filterMovies = (selectedGenre, movies) => {
+    const filteredMovies = selectedGenre._id
+      ? movies.filter(m => m.genre._id === selectedGenre._id)
+      : movies;
+    return filteredMovies;
+  };
+
   componentDidMount() {
     this.fetchMovies();
+    this.fetchGenres();
   }
 
   render() {
-    const { movies, moviesPerPage, currentPage } = this.state;
+    const { movies, pageSize, currentPage, genres, selectedGenre } = this.state;
+
+    // filter Movies by selectedGenre
+    const filteredMovies = this.filterMovies(selectedGenre, movies);
+
+    // Movies on each page (depends on pageSize)
+    const moviesPerPage = this.paginate(filteredMovies, pageSize, currentPage);
+
     return (
-      <React.Fragment>
-        {this.displayMovies()}
-        <Pagination
-          movies={movies}
-          moviesPerPage={moviesPerPage}
-          currentPage={currentPage}
-          onPageChange={this.handlePageChange}
-        />
-      </React.Fragment>
+      <div className="container">
+        {movies.length === 0 ? (
+          <p>There are no movies currently</p>
+        ) : (
+          <p>There are {movies.length} movies in the Database</p>
+        )}
+
+        <div className="row">
+          <div className="col-md-3">
+            <Genres
+              genres={genres}
+              selectedGenre={selectedGenre}
+              onSelectGenre={this.handleSelectGenre}
+            />
+          </div>
+
+          <div className="col-md-9">
+            <Table movies={moviesPerPage} onDelete={this.handleDelete} />
+            <Pagination
+              movies={filteredMovies}
+              pageSize={pageSize}
+              currentPage={currentPage}
+              onPageChange={this.handlePageChange}
+            />
+          </div>
+        </div>
+      </div>
     );
   }
 }

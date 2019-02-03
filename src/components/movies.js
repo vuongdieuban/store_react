@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import _ from "lodash";
-import Pagination from "./pagination";
+import Pagination from "./common/pagination";
 import Genres from "./genres";
-import Table from "./moviesTable";
+import MovieTable from "./moviesTable";
 
 const MOVIES_URL = "http://store.banvuong.com/api/movies";
 const GENRES_URL = "http://store.banvuong.com/api/genres";
@@ -16,7 +16,9 @@ class Movies extends Component {
     currentPage: 1,
 
     genres: [],
-    selectedGenre: {}
+    selectedGenre: {},
+
+    sortColumn: { path: "name", order: "asc" }
   };
 
   fetchMovies = async () => {
@@ -50,6 +52,10 @@ class Movies extends Component {
     });
   };
 
+  handleSort = sortColumn => {
+    this.setState({ sortColumn });
+  };
+
   paginate = (movies, pageSize, currentPage) => {
     const startIndex = (currentPage - 1) * pageSize;
     const currentMovies = _(movies) // turn movies into lodash wrapper object
@@ -72,13 +78,27 @@ class Movies extends Component {
   }
 
   render() {
-    const { movies, pageSize, currentPage, genres, selectedGenre } = this.state;
+    const {
+      movies,
+      pageSize,
+      currentPage,
+      genres,
+      selectedGenre,
+      sortColumn
+    } = this.state;
 
     // filter Movies by selectedGenre
     const filteredMovies = this.filterMovies(selectedGenre, movies);
 
+    // Sorting movies
+    const sortedMovies = _.orderBy(
+      filteredMovies,
+      [sortColumn.path],
+      [sortColumn.order]
+    );
+
     // Movies on each page (depends on pageSize)
-    const moviesPerPage = this.paginate(filteredMovies, pageSize, currentPage);
+    const moviesPerPage = this.paginate(sortedMovies, pageSize, currentPage);
 
     return (
       <div className="container">
@@ -98,7 +118,12 @@ class Movies extends Component {
           </div>
 
           <div className="col-md-9">
-            <Table movies={moviesPerPage} onDelete={this.handleDelete} />
+            <MovieTable
+              movies={moviesPerPage}
+              onDelete={this.handleDelete}
+              onSort={this.handleSort}
+              sortColumn={sortColumn}
+            />
             <Pagination
               movies={filteredMovies}
               pageSize={pageSize}

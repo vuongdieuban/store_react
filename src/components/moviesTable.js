@@ -1,60 +1,40 @@
 import React, { Component } from "react";
+import TableHeader from "./common/tableHeader";
+import TableBody from "./common/tableBody";
 
-class Table extends Component {
-  displayMovies = () => {
-    return (
-      <table className="table">
-        {this.displayFields()}
-        {this.displayRecords()}
-      </table>
-    );
-  };
-
-  displayFields = () => {
-    const fields = ["Name", "Genre", "Stock", "Rate", ""];
-    return (
-      <thead>
-        <tr>
-          {fields.map(field => (
-            <th scope="col" key={field}>
-              {field}
-            </th>
-          ))}
-        </tr>
-      </thead>
-    );
-  };
-
-  displayRecords = () => {
-    const { movies, onDelete } = this.props;
-    return (
-      <tbody>
-        {movies.length &&
-          movies.map(movie => {
-            return (
-              <tr key={movie._id}>
-                <th scope="row">{movie.name}</th>
-                <td>{movie.genre.name}</td>
-                <td>{movie.numberInStock}</td>
-                <td>{movie.dailyRentalRate}</td>
-                <td>
-                  <button
-                    className="btn btn-danger btn-sm"
-                    onClick={() => onDelete(movie)}
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            );
-          })}
-      </tbody>
-    );
-  };
+class MovieTable extends Component {
+  // define path for _.orderBy in movies.js. The paths are the fields of movie object passed in orderBy
+  columns = [
+    { label: "Name", path: "name" },
+    { label: "Genre", path: "genre.name" },
+    { label: "Stock", path: "numberInStock" },
+    { label: "Rate", path: "dailyRentalRate" },
+    {
+      key: "delete",
+      content: movie => (
+        <button
+          className="btn btn-danger btn-sm"
+          onClick={() => this.props.onDelete(movie)}
+        >
+          Delete
+        </button>
+      )
+    }
+  ];
 
   render() {
-    return this.displayMovies();
+    const { movies, sortColumn, onSort } = this.props;
+    return (
+      <table className="table">
+        <TableHeader
+          columns={this.columns}
+          onSort={onSort}
+          sortColumn={sortColumn}
+        />
+        <TableBody data={movies} columns={this.columns} />
+      </table>
+    );
   }
 }
 
-export default Table;
+export default MovieTable;

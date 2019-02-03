@@ -2,40 +2,38 @@ import React, { Component } from "react";
 import _ from "lodash";
 
 class Genres extends Component {
-  displayGenres = () => {
-    const { genres, selectedGenre, onSelectGenre } = this.props;
-    return genres.map(genre => {
+  displayData = () => {
+    const { data, selectedItem, onSelectItem } = this.props;
+    return data.map(item => {
       return (
         <li
           className={
-            genre === selectedGenre
-              ? "list-group-item active"
-              : "list-group-item"
+            item === selectedItem ? "list-group-item active" : "list-group-item"
           }
-          key={genre._id}
-          onClick={() => onSelectGenre(genre)}
+          key={item._id}
+          onClick={() => onSelectItem(item)}
         >
-          {genre.name}
+          {item.name}
         </li>
       );
     });
   };
   render() {
-    const { selectedGenre, onSelectGenre } = this.props;
+    const { selectedItem, onSelectItem } = this.props;
     return (
       <div>
         <ul className="list-group">
           <li
             className={
-              _.isEmpty(selectedGenre)
+              _.isEmpty(selectedItem)
                 ? "list-group-item active"
                 : "list-group-item "
             }
-            onClick={() => onSelectGenre({})}
+            onClick={() => onSelectItem({})}
           >
             All Genres
           </li>
-          {this.displayGenres()}
+          {this.displayData()}
         </ul>
       </div>
     );

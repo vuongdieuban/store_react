@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import _ from "lodash";
 import Pagination from "./common/pagination";
-import Genres from "./genres";
+import Genres from "./common/listGroup";
 import MovieTable from "./moviesTable";
 
 const MOVIES_URL = "http://store.banvuong.com/api/movies";
@@ -111,9 +111,9 @@ class Movies extends Component {
         <div className="row">
           <div className="col-md-3">
             <Genres
-              genres={genres}
-              selectedGenre={selectedGenre}
-              onSelectGenre={this.handleSelectGenre}
+              data={genres}
+              selectedItem={selectedGenre}
+              onSelectItem={this.handleSelectGenre}
             />
           </div>
 
@@ -125,7 +125,7 @@ class Movies extends Component {
               sortColumn={sortColumn}
             />
             <Pagination
-              movies={filteredMovies}
+              data={filteredMovies}
               pageSize={pageSize}
               currentPage={currentPage}
               onPageChange={this.handlePageChange}

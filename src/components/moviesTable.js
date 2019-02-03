@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import TableHeader from "./common/tableHeader";
-import TableBody from "./common/tableBody";
+import Table from "./common/table";
 
 class MovieTable extends Component {
   // define path for _.orderBy in movies.js. The paths are the fields of movie object passed in orderBy
@@ -25,14 +24,12 @@ class MovieTable extends Component {
   render() {
     const { movies, sortColumn, onSort } = this.props;
     return (
-      <table className="table">
-        <TableHeader
-          columns={this.columns}
-          onSort={onSort}
-          sortColumn={sortColumn}
-        />
-        <TableBody data={movies} columns={this.columns} />
-      </table>
+      <Table
+        data={movies}
+        sortColumn={sortColumn}
+        onSort={onSort}
+        columns={this.columns}
+      />
     );
   }
 }

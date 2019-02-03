@@ -1,14 +1,16 @@
 import React, { Component } from "react";
 import _ from "lodash";
 
-class Genres extends Component {
+class ListGroup extends Component {
   displayData = () => {
     const { data, selectedItem, onSelectItem } = this.props;
     return data.map(item => {
       return (
         <li
           className={
-            item === selectedItem ? "list-group-item active" : "list-group-item"
+            item === selectedItem
+              ? "list-group-item active clickable"
+              : "list-group-item clickable"
           }
           key={item._id}
           onClick={() => onSelectItem(item)}
@@ -26,8 +28,8 @@ class Genres extends Component {
           <li
             className={
               _.isEmpty(selectedItem)
-                ? "list-group-item active"
-                : "list-group-item "
+                ? "list-group-item active clickable"
+                : "list-group-item clickable"
             }
             onClick={() => onSelectItem({})}
           >
@@ -40,4 +42,4 @@ class Genres extends Component {
   }
 }
 
-export default Genres;
+export default ListGroup;

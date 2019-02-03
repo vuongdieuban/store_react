@@ -3,9 +3,9 @@ import PropTypes from "prop-types";
 import _ from "lodash";
 
 class Pagination extends Component {
-  renderData = () => {
-    const { data, pageSize, currentPage } = this.props;
-    const totalPages = Math.ceil(data.length / pageSize);
+  renderPages = () => {
+    const { itemCount, pageSize, currentPage } = this.props;
+    const totalPages = Math.ceil(itemCount / pageSize);
     const pages = _.range(1, totalPages + 1);
     return pages.map(page => {
       return (
@@ -26,13 +26,14 @@ class Pagination extends Component {
   render() {
     return (
       <nav aria-label="Page navigation example">
-        <ul className="pagination">{this.renderData()}</ul>
+        <ul className="pagination">{this.renderPages()}</ul>
       </nav>
     );
   }
 }
 
 Pagination.propTypes = {
+  itemCount: PropTypes.number.isRequired,
   pageSize: PropTypes.number.isRequired,
   currentPage: PropTypes.number.isRequired,
   onPageChange: PropTypes.func.isRequired

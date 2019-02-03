@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import _ from "lodash";
 import Pagination from "./common/pagination";
-import Genres from "./common/listGroup";
+import ListGroup from "./common/listGroup";
 import MovieTable from "./moviesTable";
 
 const MOVIES_URL = "http://store.banvuong.com/api/movies";
@@ -72,23 +72,17 @@ class Movies extends Component {
     return filteredMovies;
   };
 
-  componentDidMount() {
-    this.fetchMovies();
-    this.fetchGenres();
-  }
-
-  render() {
+  getPagedData = () => {
     const {
-      movies,
+      movies: allMovies,
+      selectedGenre,
       pageSize,
       currentPage,
-      genres,
-      selectedGenre,
       sortColumn
     } = this.state;
 
     // filter Movies by selectedGenre
-    const filteredMovies = this.filterMovies(selectedGenre, movies);
+    const filteredMovies = this.filterMovies(selectedGenre, allMovies);
 
     // Sorting movies
     const sortedMovies = _.orderBy(
@@ -97,20 +91,39 @@ class Movies extends Component {
       [sortColumn.order]
     );
 
-    // Movies on each page (depends on pageSize)
-    const moviesPerPage = this.paginate(sortedMovies, pageSize, currentPage);
+    // Movies on each page after filtered and sorted(depends on pageSize)
+    const movies = this.paginate(sortedMovies, pageSize, currentPage);
+    return { movies, itemCount: filteredMovies.length };
+  };
+
+  componentDidMount() {
+    this.fetchMovies();
+    this.fetchGenres();
+  }
+
+  render() {
+    const {
+      movies: allMovies,
+      genres,
+      selectedGenre,
+      pageSize,
+      currentPage,
+      sortColumn
+    } = this.state;
+
+    const { movies, itemCount } = this.getPagedData();
 
     return (
       <div className="container">
-        {movies.length === 0 ? (
+        {allMovies.length === 0 ? (
           <p>There are no movies currently</p>
         ) : (
-          <p>There are {movies.length} movies in the Database</p>
+          <p>There are {allMovies.length} movies in the Database</p>
         )}
 
         <div className="row">
           <div className="col-md-3">
-            <Genres
+            <ListGroup
               data={genres}
               selectedItem={selectedGenre}
               onSelectItem={this.handleSelectGenre}
@@ -119,13 +132,13 @@ class Movies extends Component {
 
           <div className="col-md-9">
             <MovieTable
-              movies={moviesPerPage}
+              movies={movies}
               onDelete={this.handleDelete}
               onSort={this.handleSort}
               sortColumn={sortColumn}
             />
             <Pagination
-              data={filteredMovies}
+              itemCount={itemCount}
               pageSize={pageSize}
               currentPage={currentPage}
               onPageChange={this.handlePageChange}

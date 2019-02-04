@@ -115,12 +115,6 @@ class Movies extends Component {
 
     return (
       <div className="container">
-        {allMovies.length === 0 ? (
-          <p>There are no movies currently</p>
-        ) : (
-          <p>There are {allMovies.length} movies in the Database</p>
-        )}
-
         <div className="row">
           <div className="col-md-3">
             <ListGroup
@@ -131,6 +125,11 @@ class Movies extends Component {
           </div>
 
           <div className="col-md-9">
+            {allMovies.length === 0 ? (
+              <p>There are no movies currently</p>
+            ) : (
+              <p>There are {allMovies.length} movies in the Database</p>
+            )}
             <MovieTable
               movies={movies}
               onDelete={this.handleDelete}

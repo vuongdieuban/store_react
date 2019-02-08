@@ -2,6 +2,7 @@ import React from "react";
 
 const FormInput = props => {
   const { name, label, value, onChange, type, placeholder, error } = props;
+
   return (
     <div className="form-group row">
       <label htmlFor={name} className="col-sm-2 col-form-label">

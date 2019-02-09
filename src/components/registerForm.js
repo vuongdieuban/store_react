@@ -31,30 +31,9 @@ class RegisterForm extends Form {
   };
 
   doSubmit = () => {
-    // call backend service to login
+    // call/post to backend service to register
     console.log("submitted");
   };
-
-  fields = [
-    {
-      name: "username",
-      label: "Username",
-      placeholder: "bdvuong",
-      type: "text"
-    },
-    {
-      name: "email",
-      label: "Email",
-      placeholder: "MyEmail@gmail.com",
-      type: "text"
-    },
-    {
-      name: "password",
-      label: "Password",
-      placeholder: "enter valid password",
-      type: "password"
-    }
-  ];
 
   render() {
     return (

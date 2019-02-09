@@ -1,7 +1,6 @@
-import React, { Component } from "react";
+import React from "react";
 import Joi from "joi-browser";
 import Form from "./common/form";
-import _ from "lodash";
 
 const GENRES_URL = "http://store.banvuong.com/api/genres";
 const MOVIE_URL = "http://store.banvuong.com/api/movies/";
@@ -80,33 +79,11 @@ class MovieForm extends Form {
   }
 
   doSubmit = () => {
-    // call backend service to login
+    // call backend service to post movie
     console.log("submitted");
     // redirect back to /movies
     this.props.history.replace("/movies");
   };
-
-  // fields of  form
-  inputFields = [
-    {
-      name: "name",
-      label: "Title",
-      placeholder: "Movie Title",
-      type: "text"
-    },
-    {
-      name: "numberInStock",
-      label: "In Stock",
-      placeholder: "10",
-      type: "number"
-    },
-    {
-      name: "dailyRentalRate",
-      label: "Daily Rental Rate",
-      placeholder: "2.5",
-      type: "number"
-    }
-  ];
 
   render() {
     return (

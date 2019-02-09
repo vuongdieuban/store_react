@@ -1,7 +1,6 @@
 import React from "react";
 import Joi from "joi-browser";
 import Form from "./common/form";
-// import FormInput from "./common/formInput";
 
 class LoginForm extends Form {
   state = {
@@ -25,24 +24,9 @@ class LoginForm extends Form {
   };
 
   doSubmit = () => {
-    // call backend service to login
+    // call/post backend service to login
     console.log("submitted");
   };
-
-  fields = [
-    {
-      name: "email",
-      label: "Email",
-      placeholder: "MyEmail@gmail.com",
-      type: "text"
-    },
-    {
-      name: "password",
-      label: "Password",
-      placeholder: "enter valid password",
-      type: "password"
-    }
-  ];
 
   render() {
     return (

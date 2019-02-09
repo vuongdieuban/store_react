@@ -23,7 +23,7 @@ class Form extends Component {
   };
 
   validateField = input => {
-    const { name, value } = input;
+    const { name, value } = input; // name and value property of the current html element
     const obj = { [name]: value }; // es6 computed property, this is a short hand for obj[name] = value
     const schema = { [name]: this.schema[name] };
     const { error } = Joi.validate(obj, schema);
@@ -35,15 +35,12 @@ class Form extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    const errors = this.validate();
-    this.setState({ errors: errors || {} });
-    if (errors) return;
     this.doSubmit();
   };
 
   handleChange = e => {
     const errors = { ...this.state.errors };
-    // currentTarget is the current input field/property of the form
+    // currentTarget is the current input element/field/property of the form
     const { currentTarget } = e;
     const errorMessage = this.validateField(currentTarget);
     if (errorMessage) errors[currentTarget.name] = errorMessage;

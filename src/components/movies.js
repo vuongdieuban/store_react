@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import Pagination from "./common/pagination";
 import ListGroup from "./common/listGroup";
 import MovieTable from "./moviesTable";
+import SearchBox from "./common/searchBox";
 
 const MOVIES_URL = "http://store.banvuong.com/api/movies";
 const GENRES_URL = "http://store.banvuong.com/api/genres";
@@ -19,7 +20,9 @@ class Movies extends Component {
     genres: [],
     selectedGenre: {},
 
-    sortColumn: { path: "name", order: "asc" }
+    sortColumn: { path: "name", order: "asc" },
+
+    searchQuery: ""
   };
 
   fetchMovies = async () => {
@@ -49,7 +52,8 @@ class Movies extends Component {
   handleSelectGenre = genre => {
     this.setState({
       selectedGenre: genre,
-      currentPage: 1
+      currentPage: 1,
+      searchQuery: ""
     });
   };
 
@@ -66,7 +70,7 @@ class Movies extends Component {
     return currentMovies;
   };
 
-  filterMovies = (selectedGenre, movies) => {
+  filterMoviesByGenre = (selectedGenre, movies) => {
     const filteredMovies = selectedGenre._id
       ? movies.filter(m => m.genre._id === selectedGenre._id)
       : movies;
@@ -79,11 +83,19 @@ class Movies extends Component {
       selectedGenre,
       pageSize,
       currentPage,
-      sortColumn
+      sortColumn,
+      searchQuery
     } = this.state;
 
-    // filter Movies by selectedGenre
-    const filteredMovies = this.filterMovies(selectedGenre, allMovies);
+    // filter by searchQuery OR by selectedGenre
+    let filteredMovies = allMovies;
+    if (searchQuery) {
+      filteredMovies = allMovies.filter(m =>
+        m.name.toLowerCase().startsWith(searchQuery.toLowerCase())
+      );
+    } else if (selectedGenre && selectedGenre._id) {
+      filteredMovies = this.filterMoviesByGenre(selectedGenre, allMovies);
+    }
 
     // Sorting movies
     const sortedMovies = _.orderBy(
@@ -95,6 +107,10 @@ class Movies extends Component {
     // Movies on each page after filtered and sorted(depends on pageSize)
     const movies = this.paginate(sortedMovies, pageSize, currentPage);
     return { movies, itemCount: filteredMovies.length };
+  };
+
+  handleSearch = query => {
+    this.setState({ searchQuery: query, selectedGenre: {}, currentPage: 1 });
   };
 
   componentDidMount() {
@@ -139,6 +155,15 @@ class Movies extends Component {
                 <Link to="/movies/new" className="btn btn-primary">
                   New
                 </Link>
+              </div>
+            </div>
+
+            <div className="row">
+              <div className="col-md-8">
+                <SearchBox
+                  value={this.state.searchQuery}
+                  onChange={this.handleSearch}
+                />
               </div>
             </div>
 

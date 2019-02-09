@@ -2,6 +2,24 @@ import React, { Component } from "react";
 import { Link, NavLink } from "react-router-dom";
 
 class NavBar extends Component {
+  renderNavLink = () => {
+    const links = [
+      { label: "Movies", path: "/movies" },
+      { label: "Customers", path: "/customers" },
+      { label: "Rentals", path: "/rentals" },
+      { label: "Login", path: "/login" },
+      { label: "Register", path: "/register" }
+    ];
+
+    return links.map(link => (
+      <li className="nav-item" key={link.path}>
+        <NavLink className="nav-link" to={link.path}>
+          {link.label}
+        </NavLink>
+      </li>
+    ));
+  };
+
   render() {
     return (
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -20,28 +38,7 @@ class NavBar extends Component {
           <span className="navbar-toggler-icon" />
         </button>
         <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav">
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/movies">
-                Movies <span className="sr-only">(current)</span>
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/customers">
-                Customers
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/rentals">
-                Rentals
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/login">
-                Login
-              </NavLink>
-            </li>
-          </ul>
+          <ul className="navbar-nav">{this.renderNavLink()}</ul>
         </div>
       </nav>
     );

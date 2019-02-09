@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Joi from "joi-browser";
 import FormInput from "./formInput";
+import FormSelect from "./formSelect";
 
 class Form extends Component {
   state = {
@@ -17,6 +18,7 @@ class Form extends Component {
     for (let item of error.details) {
       errors[item.path[0]] = item.message;
     }
+    // console.log("Error in validate\n", errors);
     return errors;
   };
 
@@ -27,6 +29,7 @@ class Form extends Component {
     const { error } = Joi.validate(obj, schema);
 
     if (!error) return null;
+    // console.log("Error validate Field\n", error);
     return error.details[0].message;
   };
 
@@ -59,21 +62,33 @@ class Form extends Component {
     );
   };
 
-  renderFormInput = fields => {
+  renderFormInput = (name, label, placeholder, type) => {
     const { data, errors } = this.state;
-    console.log(fields);
-    return fields.map(field => (
+    return (
       <FormInput
-        key={field.name}
-        value={data[field.name]}
+        name={name}
+        value={data[name]}
+        error={errors[name]}
+        label={label}
+        placeholder={placeholder}
+        type={type}
         onChange={this.handleChange}
-        name={field.name}
-        label={field.label}
-        placeholder={field.placeholder}
-        error={errors[field.name]}
-        type={field.type}
       />
-    ));
+    );
+  };
+
+  renderFormSelect = (name, label, options) => {
+    const { data, errors } = this.state;
+    return (
+      <FormSelect
+        name={name}
+        value={data[name]}
+        error={errors[name]}
+        options={options}
+        label={label}
+        onChange={this.handleChange}
+      />
+    );
   };
 }
 

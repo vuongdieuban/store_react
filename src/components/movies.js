@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import _ from "lodash";
+import { Link } from "react-router-dom";
 import Pagination from "./common/pagination";
 import ListGroup from "./common/listGroup";
 import MovieTable from "./moviesTable";
@@ -125,23 +126,37 @@ class Movies extends Component {
           </div>
 
           <div className="col-md-9">
-            {allMovies.length === 0 ? (
-              <p>There are no movies currently</p>
-            ) : (
-              <p>There are {allMovies.length} movies in the Database</p>
-            )}
-            <MovieTable
-              movies={movies}
-              onDelete={this.handleDelete}
-              onSort={this.handleSort}
-              sortColumn={sortColumn}
-            />
-            <Pagination
-              itemCount={itemCount}
-              pageSize={pageSize}
-              currentPage={currentPage}
-              onPageChange={this.handlePageChange}
-            />
+            <div className="row">
+              <div className="col-md-8">
+                {allMovies.length === 0 ? (
+                  <p>There are no movies currently</p>
+                ) : (
+                  <p>There are {allMovies.length} movies in the Database</p>
+                )}
+              </div>
+
+              <div className="col-md-4">
+                <Link to="/movies/new" className="btn btn-primary">
+                  New
+                </Link>
+              </div>
+            </div>
+
+            <div className="row">
+              <MovieTable
+                movies={movies}
+                onDelete={this.handleDelete}
+                onSort={this.handleSort}
+                sortColumn={sortColumn}
+              />
+
+              <Pagination
+                itemCount={itemCount}
+                pageSize={pageSize}
+                currentPage={currentPage}
+                onPageChange={this.handlePageChange}
+              />
+            </div>
           </div>
         </div>
       </div>

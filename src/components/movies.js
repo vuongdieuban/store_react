@@ -1,15 +1,13 @@
 import React, { Component } from "react";
 import _ from "lodash";
 import { Link } from "react-router-dom";
+
+import { getGenres } from "../services/genreService";
+import { getMovies, deleteMovie } from "../services/movieService";
 import Pagination from "./common/pagination";
 import ListGroup from "./common/listGroup";
 import MovieTable from "./moviesTable";
 import SearchBox from "./common/searchBox";
-
-const MOVIES_URL = "http://store.banvuong.com/api/movies";
-const GENRES_URL = "http://store.banvuong.com/api/genres";
-
-// const URL = "http://localhost:3001/api/movies";
 
 class Movies extends Component {
   state = {
@@ -25,24 +23,23 @@ class Movies extends Component {
     searchQuery: ""
   };
 
-  fetchMovies = async () => {
-    const api_call = await fetch(MOVIES_URL);
-    const movies = await api_call.json();
-    this.setState({ movies });
-    console.log(this.state.movies);
-  };
-
-  fetchGenres = async () => {
-    const api_call = await fetch(GENRES_URL);
-    const genres = await api_call.json();
-    this.setState({ genres });
-    console.log(this.state.genres);
-  };
-
-  handleDelete = movie => {
+  handleDelete = async movie => {
+    const originalMovies = this.state.movies;
+    const movies = originalMovies.filter(m => m._id !== movie._id);
     this.setState({
-      movies: this.state.movies.filter(m => m._id !== movie._id)
+      movies
     });
+
+    try {
+      await deleteMovie(movie._id);
+    } catch (ex) {
+      if (ex.response && ex.response.status === 404)
+        alert("Movie already been deleted");
+      else if (ex.response && ex.response.status === 401)
+        alert("Unauthorized! Please Login");
+
+      this.setState({ movies: originalMovies });
+    }
   };
 
   handlePageChange = page => {
@@ -113,9 +110,11 @@ class Movies extends Component {
     this.setState({ searchQuery: query, selectedGenre: {}, currentPage: 1 });
   };
 
-  componentDidMount() {
-    this.fetchMovies();
-    this.fetchGenres();
+  async componentDidMount() {
+    const movies = await getMovies();
+    const data = await getGenres();
+    const genres = [{ _id: "", name: "All Genres" }, ...data];
+    this.setState({ movies, genres });
   }
 
   render() {

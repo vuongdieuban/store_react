@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import _ from "lodash";
 
 class ListGroup extends Component {
   displayData = () => {
@@ -21,22 +20,9 @@ class ListGroup extends Component {
     });
   };
   render() {
-    const { selectedItem, onSelectItem } = this.props;
     return (
       <div>
-        <ul className="list-group">
-          <li
-            className={
-              _.isEmpty(selectedItem)
-                ? "list-group-item active clickable"
-                : "list-group-item clickable"
-            }
-            onClick={() => onSelectItem({})}
-          >
-            All Genres
-          </li>
-          {this.displayData()}
-        </ul>
+        <ul className="list-group">{this.displayData()}</ul>
       </div>
     );
   }

@@ -1,11 +1,12 @@
 import React from "react";
 import Joi from "joi-browser";
 import Form from "./common/form";
-
-const GENRES_URL = "http://store.banvuong.com/api/genres";
-const MOVIE_URL = "http://store.banvuong.com/api/movies/";
+import { getGenres } from "../services/genreService";
+import { getOneMovie, saveMovie } from "../services/movieService";
+import httpService from "../services/httpService";
 
 class MovieForm extends Form {
+  // state.data does not contain _id, when create a movie, the backend will assign the _id
   state = {
     data: {
       name: "",
@@ -17,7 +18,9 @@ class MovieForm extends Form {
     errors: {}
   };
 
+  // Schema contains _id is optional (for when receive already existed movie)
   schema = {
+    _id: Joi.string(),
     name: Joi.string()
       .min(5)
       .required()
@@ -37,20 +40,7 @@ class MovieForm extends Form {
       .label("Daily Rental Rate")
   };
 
-  fetchGenres = async () => {
-    const api_call = await fetch(GENRES_URL);
-    const genres = await api_call.json();
-    console.log("genres fetched\n", genres);
-    return genres;
-  };
-
-  fetchMovie = async movieId => {
-    const api_call = await fetch(MOVIE_URL + movieId);
-    const movie = await api_call.json();
-    console.log("Movie fetched\n", movie);
-    return movie;
-  };
-
+  // only extract nesscessary info (ie: exclude property like __v,)
   mapToViewModel = movie => {
     return {
       _id: movie._id,
@@ -61,28 +51,41 @@ class MovieForm extends Form {
     };
   };
 
-  async componentDidMount() {
-    const genres = await this.fetchGenres();
+  populateGenres = async () => {
+    const genres = await getGenres();
     this.setState({ genres });
+  };
 
-    const movieId = this.props.match.params.id;
-    if (movieId === "new") return;
-
+  populateMovie = async () => {
     try {
-      const movie = await this.fetchMovie(movieId);
-      // if movie not found redirect to /not-found
-      if (!movie) return this.props.history.replace("/not-found");
+      const movieId = this.props.match.params.id;
+      if (movieId === "new") return;
+
+      // if movie not found or any expected error occurs, axios interceptor from httpService will be triggered and return a Promise.reject(error) => go to catch block
+      const movie = await getOneMovie(movieId);
       this.setState({ data: this.mapToViewModel(movie) });
-    } catch {
-      return this.props.history.replace("/not-found");
+    } catch (ex) {
+      if (ex.response && ex.response.status === 404)
+        return this.props.history.replace("/not-found");
     }
+  };
+
+  async componentDidMount() {
+    await this.populateGenres();
+    await this.populateMovie();
   }
 
-  doSubmit = () => {
-    // call backend service to post movie
-    console.log("submitted");
-    // redirect back to /movies
-    this.props.history.replace("/movies");
+  doSubmit = async () => {
+    try {
+      // call backend service to post/put movie
+      await saveMovie(this.state.data);
+      console.log("Movie Submitted");
+    } catch (ex) {
+      if (ex.response && ex.response.status === 401)
+        alert("Unauthorized! Please Login");
+      // redirect back to /movies
+      this.props.history.replace("/movies");
+    }
   };
 
   render() {

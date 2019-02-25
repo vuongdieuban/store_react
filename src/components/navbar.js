@@ -3,13 +3,25 @@ import { Link, NavLink } from "react-router-dom";
 
 class NavBar extends Component {
   renderNavLink = () => {
+    const { user } = this.props;
     const links = [
       { label: "Movies", path: "/movies" },
       { label: "Customers", path: "/customers" },
-      { label: "Rentals", path: "/rentals" },
-      { label: "Login", path: "/login" },
-      { label: "Register", path: "/register" }
+      { label: "Rentals", path: "/rentals" }
     ];
+
+    // check to see if user is logged in or not
+    if (!user) {
+      links.push(
+        { label: "Login", path: "/login" },
+        { label: "Register", path: "/register" }
+      );
+    } else {
+      links.push(
+        { label: "Logout", path: "/logout" },
+        { label: `${user.username}`, path: "/profile" }
+      );
+    }
 
     return links.map(link => (
       <li className="nav-item" key={link.path}>

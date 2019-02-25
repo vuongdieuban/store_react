@@ -1,7 +1,7 @@
 import http from "./httpService";
 
-// const MOVIE_URL = "http://store.banvuong.com/api/movies";
-const MOVIE_URL = "http://localhost:3001/api/movies";
+const MOVIE_URL = "http://store.banvuong.com/api/movies";
+// const MOVIE_URL = "http://localhost:3001/api/movies";
 
 const getMovies = async () => {
   const { data } = await http.get(MOVIE_URL);

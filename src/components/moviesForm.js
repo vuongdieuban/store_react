@@ -44,7 +44,7 @@ class MovieForm extends Form {
     return {
       _id: movie._id,
       name: movie.name,
-      genreId: movie.genreId,
+      genreId: movie.genre._id,
       numberInStock: movie.numberInStock,
       dailyRentalRate: movie.dailyRentalRate
     };

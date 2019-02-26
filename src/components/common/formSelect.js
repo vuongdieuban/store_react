@@ -1,7 +1,7 @@
 import React from "react";
 
 const FormSelect = props => {
-  const { name, label, options, error, onChange } = props;
+  const { name, value, label, options, error, onChange } = props;
 
   const renderOptions = () => {
     return (
@@ -25,8 +25,8 @@ const FormSelect = props => {
           name={name}
           id={name}
           onChange={onChange}
+          value={value}
         >
-          <option value="" />
           {renderOptions()}
         </select>
       </div>

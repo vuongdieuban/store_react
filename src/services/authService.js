@@ -4,6 +4,9 @@ import jwtDecode from "jwt-decode";
 const AUTH_URL = "http://store.banvuong.com/api/auth";
 const tokenKey = "jwt";
 
+// set JWT to header x-auth-token for all http request before any request is made
+http.setJwt(getJwt());
+
 const loginUser = async user => {
   // obtain jwt token
   const { data } = await http.post(AUTH_URL, {
@@ -30,5 +33,9 @@ const getCurrentUser = () => {
   }
   return null;
 };
+
+function getJwt() {
+  return localStorage.getItem(tokenKey);
+}
 
 export default { loginUser, logoutUser, getCurrentUser, loginWithJwt };

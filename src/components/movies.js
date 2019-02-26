@@ -127,6 +127,8 @@ class Movies extends Component {
       sortColumn
     } = this.state;
 
+    const { user } = this.props;
+
     const { movies, itemCount } = this.getPagedData();
 
     return (
@@ -172,6 +174,7 @@ class Movies extends Component {
                 onDelete={this.handleDelete}
                 onSort={this.handleSort}
                 sortColumn={sortColumn}
+                user={user}
               />
 
               <Pagination

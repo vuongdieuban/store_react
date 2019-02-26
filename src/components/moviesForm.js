@@ -3,7 +3,6 @@ import Joi from "joi-browser";
 import Form from "./common/form";
 import { getGenres } from "../services/genreService";
 import { getOneMovie, saveMovie } from "../services/movieService";
-import httpService from "../services/httpService";
 
 class MovieForm extends Form {
   // state.data does not contain _id, when create a movie, the backend will assign the _id
@@ -83,6 +82,7 @@ class MovieForm extends Form {
     } catch (ex) {
       if (ex.response && ex.response.status === 401)
         alert("Unauthorized! Please Login");
+
       // redirect back to /movies
       this.props.history.replace("/movies");
     }

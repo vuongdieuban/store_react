@@ -1,6 +1,7 @@
 import http from "./httpService";
+import { getBaseURL } from "./getBaseURL";
 
-const GENRES_URL = "http://store.banvuong.com/api/genres";
+const GENRES_URL = `${getBaseURL()}/genres`;
 
 const getGenres = async () => {
   const { data } = await http.get(GENRES_URL);

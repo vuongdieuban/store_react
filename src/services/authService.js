@@ -1,7 +1,8 @@
 import http from "./httpService";
 import jwtDecode from "jwt-decode";
+import { getBaseURL } from "./getBaseURL";
 
-const AUTH_URL = "http://store.banvuong.com/api/auth";
+const AUTH_URL = `${getBaseURL()}/auth`;
 const tokenKey = "jwt";
 
 // set JWT to header x-auth-token for all http request before any request is made

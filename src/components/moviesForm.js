@@ -79,6 +79,7 @@ class MovieForm extends Form {
       // call backend service to post/put movie
       await saveMovie(this.state.data);
       console.log("Movie Submitted");
+      window.location = "/";
     } catch (ex) {
       if (ex.response && ex.response.status === 401)
         alert("Unauthorized! Please Login");

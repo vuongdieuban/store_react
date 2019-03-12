@@ -12,7 +12,6 @@ class RegisterForm extends Form {
 
   schema = {
     username: Joi.string()
-      .alphanum()
       .min(5)
       .max(50)
       .required()

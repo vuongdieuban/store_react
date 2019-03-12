@@ -5,9 +5,9 @@ class NavBar extends Component {
   renderNavLink = () => {
     const { user } = this.props;
     const links = [
-      { label: "Movies", path: "/movies" }
-      // { label: "Customers", path: "/customers" },
-      // { label: "Rentals", path: "/rentals" }
+      { label: "Movies", path: "/movies" },
+      { label: "Customers", path: "/customers" },
+      { label: "Rentals", path: "/rentals" }
     ];
 
     // check to see if user is logged in or not

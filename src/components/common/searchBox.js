@@ -1,7 +1,7 @@
 import React from "react";
 
 const SearchBox = props => {
-  const { value, onChange } = props;
+  const { value, onChange, placeholder } = props;
   return (
     <form>
       <div className="form-group">
@@ -9,7 +9,7 @@ const SearchBox = props => {
           type="text"
           name="query"
           className="form-control"
-          placeholder="Search Movies"
+          placeholder={placeholder}
           value={value}
           onChange={e => onChange(e.currentTarget.value)}
         />

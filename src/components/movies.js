@@ -164,6 +164,7 @@ class Movies extends Component {
                 <SearchBox
                   value={this.state.searchQuery}
                   onChange={this.handleSearch}
+                  placeholder="Search Movie"
                 />
               </div>
             </div>

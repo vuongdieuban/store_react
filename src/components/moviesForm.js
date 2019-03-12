@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import Joi from "joi-browser";
 import Form from "./common/form";
 import { getGenres } from "../services/genreService";
@@ -103,8 +104,20 @@ class MovieForm extends Form {
             "2.5",
             "number"
           )}
-
-          {this.renderButton("Save")}
+          <div className="row">
+            <div className="col col-sm-1">{this.renderButton("Save")}</div>
+            <div className="col col-sm-1">
+              <Link
+                to={{
+                  pathname: "/rentals/new",
+                  state: { movie: this.state.data }
+                }}
+                className="btn btn-primary"
+              >
+                Rent
+              </Link>
+            </div>
+          </div>
         </form>
       </div>
     );

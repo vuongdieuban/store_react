@@ -9,4 +9,10 @@ const getAllRentals = async () => {
   return data;
 };
 
-export { getAllRentals };
+const saveRental = async rental => {
+  const { data } = await http.post(RENTALS_URL, rental);
+  console.log("Rental created", data);
+  return data;
+};
+
+export { getAllRentals, saveRental };

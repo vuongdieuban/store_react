@@ -53,11 +53,17 @@ class ReturnForm extends Form {
       await saveReturn(returnRental);
       this.props.history.replace("/rentals");
     } catch (ex) {
-      if (ex.response && ex.response.status === 404)
-        alert("Customer or Movie is invalid");
-      if (ex.response && ex.response.status === 400)
-        alert("Customer or Movie is invalid");
-      this.props.history.replace("/rentals");
+      const { response } = ex;
+      if (
+        response &&
+        (response.status === 400 ||
+          response.status === 404 ||
+          response.status === 401)
+      ) {
+        const errors = { ...this.state.errors };
+        errors.customerEmail = ex.response.data;
+        this.setState({ errors });
+      }
     }
   };
 

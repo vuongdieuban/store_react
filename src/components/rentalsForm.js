@@ -70,12 +70,23 @@ class RentalForm extends Form {
       await saveRental(rental);
       this.props.history.replace("/rentals");
     } catch (ex) {
-      if (ex.response && ex.response.status === 404)
-        alert("Customer or Movie is invalid");
-      if (ex.response && ex.response.status === 400)
-        alert("Customer or Movie is invalid");
-      alert(ex.message);
-      this.props.history.replace("/rentals/new");
+      const { response } = ex;
+      if (
+        response &&
+        (response.status === 400 ||
+          response.status === 404 ||
+          response.status === 401)
+      ) {
+        const errors = { ...this.state.errors };
+        errors.customerEmail = ex.response.data;
+        this.setState({ errors });
+      }
+
+      if (ex.message === "Invalid Customer") {
+        const errors = { ...this.state.errors };
+        errors.customerEmail = ex.message;
+        this.setState({ errors });
+      }
     }
   };
 

@@ -41,7 +41,7 @@ class App extends Component {
               render={props => <Movies {...props} user={this.state.user} />}
             />
             <ProtectedRoute path="/rentals/new" component={RentalForm} />
-            <Route path="/rentals" component={Rentals} />
+            <Route exact path="/rentals" component={Rentals} />
             <Route path="/returns" component={Returns} />
             <Route path="/customers" component={Customers} />
             <Route path="/not-found" component={NotFound} />

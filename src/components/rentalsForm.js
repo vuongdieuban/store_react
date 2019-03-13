@@ -37,7 +37,7 @@ class RentalForm extends Form {
 
   populateMovies = async () => {
     try {
-      // get All movies (show all movies in options)
+      // if /rentals/new, get All movies (show all movies in options). Set data default to the first movie
       let movies = [];
       movies = await getMovies();
       this.setState({ movies, data: this.mapToViewModel(movies[0]) });

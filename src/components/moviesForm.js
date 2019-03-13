@@ -59,7 +59,16 @@ class MovieForm extends Form {
   populateMovie = async () => {
     try {
       const movieId = this.props.match.params.id;
-      if (movieId === "new") return;
+      /** if come directly to /movies/new, set default genre to the first genre. Otherwise, if come from
+       * /movies/:id then populate the form based on that specific movie
+       */
+      if (movieId === "new") {
+        // genres is available because we populate genres first
+        let { genres, data } = this.state;
+        data.genreId = genres[0]._id;
+        this.setState({ data });
+        return;
+      }
 
       // if movie not found or any expected error occurs, axios interceptor from httpService will be triggered and return a Promise.reject(error) => go to catch block
       const movie = await getOneMovie(movieId);

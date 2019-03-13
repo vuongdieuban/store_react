@@ -4,7 +4,7 @@ import Movies from "./components/movies";
 import Customers from "./components/customers";
 import Rentals from "./components/rentals";
 import RentalForm from "./components/rentalsForm";
-import Returns from "./components/returns";
+import ReturnForm from "./components/returnsForm";
 import NavBar from "./components/navbar";
 import NotFound from "./components/notFound";
 import LoginForm from "./components/loginForm";
@@ -42,7 +42,7 @@ class App extends Component {
             />
             <ProtectedRoute path="/rentals/new" component={RentalForm} />
             <Route exact path="/rentals" component={Rentals} />
-            <Route path="/returns" component={Returns} />
+            <Route path="/returns" component={ReturnForm} />
             <Route path="/customers" component={Customers} />
             <Route path="/not-found" component={NotFound} />
             <Redirect from="/" exact to="/movies" />

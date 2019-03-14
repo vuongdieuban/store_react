@@ -9,4 +9,10 @@ const getAllCustomers = async () => {
   return data;
 };
 
-export { getAllCustomers };
+const saveCustomer = async customer => {
+  const { data } = await http.post(CUSTOMERS_URL, customer);
+  console.log("Customer created", data);
+  return data;
+};
+
+export { getAllCustomers, saveCustomer };

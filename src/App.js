@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Route, Redirect, Switch } from "react-router-dom";
 import Movies from "./components/movies";
-import Customers from "./components/customers";
+import CustomerForm from "./components/customersForm";
 import Rentals from "./components/rentals";
 import RentalForm from "./components/rentalsForm";
 import ReturnForm from "./components/returnsForm";
@@ -42,8 +42,8 @@ class App extends Component {
             />
             <ProtectedRoute path="/rentals/new" component={RentalForm} />
             <Route exact path="/rentals" component={Rentals} />
-            <Route path="/returns" component={ReturnForm} />
-            <Route path="/customers" component={Customers} />
+            <ProtectedRoute path="/returns" component={ReturnForm} />
+            <ProtectedRoute path="/customers" component={CustomerForm} />
             <Route path="/not-found" component={NotFound} />
             <Redirect from="/" exact to="/movies" />
             <Redirect to="/not-found" />

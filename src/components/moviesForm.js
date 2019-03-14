@@ -64,9 +64,11 @@ class MovieForm extends Form {
        */
       if (movieId === "new") {
         // genres is available because we populate genres first
-        let { genres, data } = this.state;
-        data.genreId = genres[0]._id;
-        this.setState({ data });
+        console.log(movieId);
+        const { genres, data } = this.state;
+        let defaultData = { ...data };
+        defaultData.genreId = genres[0]._id;
+        this.setState({ data: defaultData });
         return;
       }
 
@@ -115,17 +117,19 @@ class MovieForm extends Form {
           )}
           <div className="row">
             <div className="col col-sm-1">{this.renderButton("Save")}</div>
-            <div className="col col-sm-1">
-              <Link
-                to={{
-                  pathname: "/rentals/new",
-                  state: { movie: this.state.data }
-                }}
-                className="btn btn-primary"
-              >
-                Rent
-              </Link>
-            </div>
+            {this.props.match.params.id === "new" ? null : (
+              <div className="col col-sm-1">
+                <Link
+                  to={{
+                    pathname: "/rentals/new",
+                    state: { movie: this.state.data }
+                  }}
+                  className="btn btn-primary"
+                >
+                  Rent
+                </Link>
+              </div>
+            )}
           </div>
         </form>
       </div>
